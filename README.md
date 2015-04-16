@@ -1,4 +1,4 @@
-gruntPackage
+web-challenge semifinal
 ============
 
-default grunt package
+Let's ROCK!!

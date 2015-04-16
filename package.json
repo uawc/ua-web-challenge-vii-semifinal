@@ -1,7 +1,8 @@
 {
-  "name": "grunt-project",
+  "name": "web-challenge",
   "version": "0.0.1",
   "author": "Skakun Maxim <skakun.maxim@gmail.com>",
+  "private": true,
   "devDependencies": {
     "grunt": "latest",
     "grunt-cli": "latest",
