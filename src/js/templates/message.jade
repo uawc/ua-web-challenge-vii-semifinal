@@ -1,0 +1,13 @@
+legend.rating >>> Rating: #{rating} <<<
+
+if thumbnail || thumbnail == 'self'
+    a.preview.empty(href=url)
+        img(src=thumbnail width="70" height="52" alt="")
+
+.content
+    a.link_white(href=url)= title
+
+    .links submitted #{created_utc} ago by <b>#{author}</b> to
+        a.link_pink(href=subreddit)= ' ' + subreddit
+
+    a(href="#") #{comments} comments

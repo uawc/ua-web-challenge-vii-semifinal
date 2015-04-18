@@ -54,7 +54,7 @@ module.exports = function(grunt) {
 			},
 			templates: {
 				files: {
-					'app/js/templates.js': 'src/templates/**/*.jade'
+					'app/js/templates.js': 'src/js/templates/**/*.jade'
 				},
 				options: {
 					amd: true,
@@ -72,6 +72,18 @@ module.exports = function(grunt) {
 				cwd: 'src/js',
 				src: ['**/*.js'],
 				dest: 'app/js'
+			},
+			img: {
+				expand: true,
+				cwd: 'src/img',
+				src: ['**/*.png', '**/*.jpg'],
+				dest: 'app/img'
+			},
+			font: {
+				expand: true,
+				cwd: 'src/fonts',
+				src: ['**/*.eot', '**/*.woff', '**/*.svg', '**/*.ttf'],
+				dest: 'app/css/fonts'
 			}
 		},
 
@@ -85,7 +97,7 @@ module.exports = function(grunt) {
 				tasks: ['jade:main']
 			},
 			templates: {
-				files: ['src/templates/**/*.jade'],
+				files: ['src/js/templates/**/*.jade'],
 				tasks: ['jade:templates']
 			},
 			js: {
@@ -100,7 +112,7 @@ module.exports = function(grunt) {
 				limit: 10
 			},
 			build: {
-				tasks: ['less:main', 'jade:main', 'jade:templates', 'copy:main']
+				tasks: ['less:main', 'jade:main', 'jade:templates', 'copy:main', 'copy:img', 'copy:font']
 			},
 			watch: {
 				tasks: ['watch:css', 'watch:html', 'watch:templates', 'watch:js']

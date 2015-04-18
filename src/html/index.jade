@@ -1,10 +1,11 @@
 doctype html
 html
     head
-        title Hello world
-
+        title Reddit Reader
         link(rel='stylesheet', href='css/main.css')
-    body
-        .hello Hello World
+    body#app-root
+        include header
+
+        section#app-content
 
         script(src="lib/requirejs/require.js", data-main="js/config.js")
