@@ -11,7 +11,7 @@ define(['underscore', 'backbone', 'reddit', 'models/message.model'],
 			if (!response.data) return;
 			// Filtering object
 			return response.data.children.map(function(el){
-				return _.pick(el.data, 'url', 'title', 'rating','author','created_utc','comments','subreddit','thumbnail','commentsURL')
+				return _.pick(el.data, 'url', 'title', 'score','author','created_utc','num_comments','subreddit','thumbnail','commentsURL')
 			})
 		}
 	});

@@ -1,13 +1,13 @@
-legend.rating >>> Rating: #{rating} <<<
+legend.rating >>> Rating: #{score} <<<
 
-if thumbnail || thumbnail == 'self'
+if thumbnail
     a.preview.empty(href=url)
         img(src=thumbnail width="70" height="52" alt="")
 
 .content
     a.link_white(href=url)= title
 
-    .links submitted #{created_utc} ago by <b>#{author}</b> to
-        a.link_pink(href=subreddit)= ' ' + subreddit
+    .links submitted #{created_utc} by <b>#{author}</b> to
+        a.link_pink(href='/?/' + subreddit)= ' /r/' + subreddit
 
-    a(href="#") #{comments} comments
+    a(href="#") #{num_comments} comments

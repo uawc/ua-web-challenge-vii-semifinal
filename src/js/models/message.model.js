@@ -6,10 +6,10 @@ define(['underscore', 'backbone'],
 			defaults: {
 				url:'',
 				title: '',
-				rating: '',
+				score: '',
 				author: '',
 				created_utc: '',
-				comments: '',
+				num_comments: '',
 				subreddit: '',
 				thumbnail: '',
 				commentsURL: ''
@@ -17,6 +17,7 @@ define(['underscore', 'backbone'],
 
 			initialize: function() {
 				this._convertTime();
+				this._checkThumbnail(this.get('thumbnail'));
 			},
 
 			_convertTime: function() {
@@ -35,9 +36,21 @@ define(['underscore', 'backbone'],
 				//getting Date object using Date stamp
 				redditDate = new Date(timeStamp);
 
-				formattedDate = redditDate.getFullYear() + '/' + redditDate.getMonth() + '/' + redditDate.getDate() + ' ' + redditDate.getHours() + ':' + redditDate.getMinutes();
+				formattedDate = redditDate.getFullYear() + '/' + this._addZero(redditDate.getMonth()) + '/' + this._addZero(redditDate.getDate()) + ' ' + this._addZero(redditDate.getHours()) + ':' + this._addZero(redditDate.getMinutes());
 
 				this.set('created_utc', formattedDate);
+			},
+
+			_addZero: function(i) {
+				return i < 10 ? "0" + i : i;
+			},
+
+			_checkThumbnail: function(url) {
+				var regExp = new RegExp('^http:\/\/|^https:\/\/');
+
+				if (!regExp.test(url)) {
+					this.set('thumbnail', '');
+				}
 			}
 		});
 });
