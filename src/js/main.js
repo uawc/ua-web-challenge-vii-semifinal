@@ -5,7 +5,8 @@ define(['jquery', 'reddit', 'backbone', 'routers/router', 'views/app.view'],
 		});
 
 		var router = new Router();
-		Backbone.history.start();
 
-		var app = new AppView();
+		var app = new AppView({router: router});
+
+		Backbone.history.start({pushState: true});
 	});

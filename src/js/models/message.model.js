@@ -3,6 +3,8 @@ define(['underscore', 'backbone'],
 	'use strict';
 
 		return Backbone.Model.extend({
+
+			// Default data of this Model
 			defaults: {
 				url:'',
 				title: '',
@@ -15,11 +17,16 @@ define(['underscore', 'backbone'],
 				commentsURL: ''
 			},
 
+			// Initialize message.model
 			initialize: function() {
 				this._convertTime();
 				this._checkThumbnail(this.get('thumbnail'));
 			},
 
+			/**
+			 * Convert time from stamp to "YY/MM/DD H/M"
+			 * @private
+			 * */
 			_convertTime: function() {
 				var timeStamp = this.get('created_utc'),
 					redditDate,
@@ -41,10 +48,20 @@ define(['underscore', 'backbone'],
 				this.set('created_utc', formattedDate);
 			},
 
+			/**
+			 * Add zero for Date elements
+			 * @private
+			 * @param i - {number}
+			 * */
 			_addZero: function(i) {
 				return i < 10 ? "0" + i : i;
 			},
 
+			/**
+			 * Check if thumbnail is an URL
+			 * @private
+			 * @param url {string}
+			 * */
 			_checkThumbnail: function(url) {
 				var regExp = new RegExp('^http:\/\/|^https:\/\/');
 

@@ -1,23 +1,23 @@
-define([ 'jquery', 'underscore', 'backbone', 'views/message.view'],
-	function ($, _, Backbone, MessageView) {
+define([ 'jquery', 'underscore', 'backbone', 'views/navigation.item.view'],
+	function ($, _, Backbone, NavView) {
 		'use strict';
 
 		return Backbone.View.extend({
 
 			// Define View element
-			tagName: 'div',
+			tagName: 'ul',
 
-			// Initialize messages.view
+			// Initialize message.view
 			initialize: function () {
-				this.$wrapper = $('#app-content');
+				this.$wrapper = $('#main-navigation');
 
 				this.listenTo(this.collection, 'reset', this.remove);
-				this.render();
+
+				this.render().$el.appendTo(this.$wrapper);
 			},
 
 			render: function () {
 				this.collection.each(this._renderChild, this);
-				this.$wrapper.append(this.$el);
 				// returning this for chaining
 				return this;
 			},
@@ -28,8 +28,8 @@ define([ 'jquery', 'underscore', 'backbone', 'views/message.view'],
 			 * @param child - single model from collection
 			 * */
 			_renderChild: function(child) {
-				var messageView = new MessageView({ model: child });
-				this.$el.append(messageView.el);
+				var navView = new NavView({ model: child });
+				this.$el.append(navView.el);
 			}
 		});
-});
+	});

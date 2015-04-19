@@ -5,13 +5,10 @@ define([ 'jquery', 'underscore', 'backbone', 'templates'],
 		return Backbone.View.extend({
 
 			// Define View element
-			tagName: 'fieldset',
-
-			// Add class name to an element
-			className: 'reddit-item',
+			tagName: 'li',
 
 			// Define message template
-			template: templates.message,
+			template: templates.navigation,
 
 			// Initialize message.view
 			initialize: function () {
@@ -27,4 +24,4 @@ define([ 'jquery', 'underscore', 'backbone', 'templates'],
 				return this;
 			}
 		});
-});
+	});

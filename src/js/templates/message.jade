@@ -8,6 +8,6 @@ if thumbnail
     a.link_white(href=url)= title
 
     .links submitted #{created_utc} by <b>#{author}</b> to
-        a.link_pink(href='/?/' + subreddit)= ' /r/' + subreddit
+        a.link_pink.no-refresh(href='/?/' + subreddit)= ' /r/' + subreddit
 
-    a(href="#") #{num_comments} comments
+    a.no-refresh(href="#") #{num_comments} comments

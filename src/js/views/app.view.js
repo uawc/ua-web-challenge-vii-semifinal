@@ -1,36 +1,107 @@
-define([ 'jquery', 'underscore', 'backbone', 'collections/message.collection', 'views/messages.view', 'templates'
-], function ($, _, Backbone, MessageCollection, MessagesView, templates) {
+define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'collections/navigation.collection', 'views/messages.view', 'views/navigation.view', 'templates'
+], function ($, _, Backbone, messageCollection, navigationCollection, MessagesView, NavigationView, templates) {
 	'use strict';
 
 	// Our overall **AppView** is the top-level piece of UI.
 	return Backbone.View.extend({
 
-		// Instead of generating a new element, bind to the existing skeleton of
-		// the App already present in the HTML.
+		_baseURL: 'http://www.reddit.com/',
+
+		_homeURL: 'http://www.reddit.com/hot',
+
+		_defaultSections: ['hot', 'new', 'rising', 'controversial', 'top'],
+
+		// Define View element
 		el: '#app-root',
 
-		// Compile our stats template
+		// Define message template
 		template: templates,
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
-
+			'click a.no-refresh': '_customNavigate'
 		},
 
-		// At initialization we bind to the relevant events on the `Todos`
-		// collection, when items are added or changed. Kick things off by
-		// loading any preexisting todos that might be saved in *localStorage*.
-		initialize: function () {
+		// Initialize app.view
+		initialize: function (options) {
+			this._router = options.router;
 
-			var messages = new MessageCollection();
+			this.listenTo(this._router, 'route:sectionRoute', this._sectionRoute);
+			this.listenTo(this._router, 'route:basicRoute', this._basicRoute);
+			this.listenTo(this._router, 'route:defaultRoute', function () {console.log('default')});
 
-			messages.fetch({url: 'http://www.reddit.com/hot.json', success: this.render});
+			navigationCollection.fetch({reset: true, success: this._renderNavigation});
 		},
 
-		// Re-rendering the App just means refreshing the statistics -- the rest
-		// of the app doesn't change.
-		render: function (collection, response, options) {
-			var messagesView = new MessagesView({collection: collection});
+		render: function (url) {
+			messageCollection.fetch({reset: true, url: url, success: this._renderMessages});
+			return this;
+		},
+
+		_renderMessages: function (collection, response, options) {
+			new MessagesView({collection: collection});
+		},
+
+		_renderNavigation: function (collection, response, options) {
+			new NavigationView({collection: collection});
+		},
+
+		_customNavigate: function (e) {
+			var $el = $(e.currentTarget);
+			e.preventDefault();
+
+			this._router.navigate($el.attr('href'), {trigger: true});
+		},
+
+		_sectionRoute: function (url) {
+			console.log(url);
+			if (this._defaultSections.indexOf(url) !== -1) {
+				this.render(this._baseURL + url + '/.json');
+				return;
+			}
+			console.log('No such page')
+		},
+
+		_basicRoute: function (url) {
+			console.log(url);
+			url = this._parseURL(url);
+
+			if (url) {
+				this.render(url);
+				return;
+			}
+
+			console.log('No such page')
+		},
+
+		_parseURL: function (url) {
+			var arrURL;
+
+			url = url || '';
+			url = url.indexOf('/') == 0 ? url.slice(1) : url;
+			arrURL = url.split('/');
+
+			switch(arrURL.length) {
+				case 1:
+					// if not empty
+					if (!arrURL[0]) {
+						url = this._homeURL + '/.json';
+						break;
+					}
+					url = this._baseURL + 'r/' + url + '/.json';
+					break;
+				case 2:
+					if (this._defaultSections.indexOf(arrURL[1]) === -1) {
+						url = null;
+						break;
+					}
+					url = this._baseURL + 'r/' + url + '/.json';
+					break;
+				default :
+					url = null;
+					break;
+			}
+			return url;
 		}
 	});
 });

@@ -1,0 +1,27 @@
+[
+  {
+	"url": "/hot",
+	"text": "hot",
+	"className": "active"
+  },
+  {
+	"url": "/new",
+	"text": "new",
+	"className": ""
+  },
+  {
+	"url": "/rising",
+	"text": "rising",
+	"className": ""
+  },
+  {
+	"url": "/controversial",
+	"text": "controversial",
+	"className": ""
+  },
+  {
+	"url": "/top",
+	"text": "top",
+	"className": ""
+  }
+]
