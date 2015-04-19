@@ -38,7 +38,7 @@ define(['underscore', 'backbone', 'models/navigation.item.model'],
 						"text": "top",
 						"className": ""
 					}
-				])
+				]);
 			}
 		});
 

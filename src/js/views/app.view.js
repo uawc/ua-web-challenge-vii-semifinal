@@ -27,7 +27,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 			this.listenTo(this._router, 'route:sectionRoute', this._sectionRoute);
 			this.listenTo(this._router, 'route:basicRoute', this._basicRoute);
 			this.listenTo(this._router, 'route:defaultRoute', function () {
-				console.log('default')
+				console.log('default');
 			});
 
 			navigationCollection.fetch();
@@ -64,7 +64,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 				this.navigationView.toggleClass(url);
 				return;
 			}
-			console.log('No such page')
+			console.log('No such page');
 		},
 
 		_basicRoute: function (url) {
@@ -84,7 +84,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 				return;
 			}
 
-			console.log('No such page')
+			console.log('No such page');
 		},
 
 		_onPaginationNextClick: function() {

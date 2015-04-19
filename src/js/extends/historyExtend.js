@@ -8,5 +8,5 @@ define(function () {
 			var match = (window || this).location.href.match(/\?(.*)$/);
 			return match ? match[1] : '';
 		}
-	}
+	};
 });

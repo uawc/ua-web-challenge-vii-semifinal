@@ -79,12 +79,6 @@ module.exports = function(grunt) {
 				src: ['**/*.png', '**/*.jpg'],
 				dest: 'app/img'
 			},
-			json: {
-				expand: true,
-				cwd: 'src/json',
-				src: ['**/*.json'],
-				dest: 'app'
-			},
 			font: {
 				expand: true,
 				cwd: 'src/fonts',
@@ -102,10 +96,6 @@ module.exports = function(grunt) {
 				files: ['src/html/**/*.jade'],
 				tasks: ['jade:main']
 			},
-			json: {
-				files: ['src/json/**/*.json'],
-				tasks: ['copy:json']
-			},
 			templates: {
 				files: ['src/js/templates/**/*.jade'],
 				tasks: ['jade:templates']
@@ -122,10 +112,10 @@ module.exports = function(grunt) {
 				limit: 10
 			},
 			build: {
-				tasks: ['less:main', 'jade:main', 'jade:templates', 'copy:main', 'copy:img', 'copy:font', 'copy:json']
+				tasks: ['less:main', 'jade:main', 'jade:templates', 'copy:main', 'copy:img', 'copy:font']
 			},
 			watch: {
-				tasks: ['watch:css', 'watch:html', 'watch:templates', 'watch:js', 'watch:json']
+				tasks: ['watch:css', 'watch:html', 'watch:templates', 'watch:js']
 			},
 			run: {
 				tasks: ['concurrent:watch', 'connect:main']
@@ -142,6 +132,7 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-copy');
 	grunt.loadNpmTasks('grunt-concurrent');
 
+	grunt.registerTask('test', ['jshint:main']);
 	grunt.registerTask('default', ['concurrent:build', 'concurrent:run']);
 	grunt.registerTask('cleanAll', ['clean:main']);
-}
+};
