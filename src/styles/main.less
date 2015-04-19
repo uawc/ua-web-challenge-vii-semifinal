@@ -55,8 +55,9 @@ header {
         display: inline-block;
 
           a {
+            display: block;
             color: #000;
-            padding: 4px 10px;
+            padding: 0 10px;
 
             &:hover,
             &.active {
@@ -72,6 +73,53 @@ header {
 
 #app-content {
   padding: 10px 0;
+
+  .pagination {
+    text-align: center;
+    width: 250px;
+    overflow: hidden;
+    margin: 35px auto 10px;
+  }
+
+  .btn {
+    float: left;
+    font-family: DOS, Monaco, Menlo, Consolas, "Courier New", monospace;
+    font-size: 18px;
+    background: #bbbbbb;
+    cursor: default;
+    text-align: center;
+    color: #000000;
+    line-height: 20px;
+    display: inline-block;
+    padding: 5px 15px;
+    margin: 0 20px 20px 0;
+    border: 0;
+
+    -webkit-box-shadow: 10px 10px 0 #000000;
+    -moz-box-shadow: 10px 10px 0 #000000;
+    box-shadow: 10px 10px 0 #000000;
+
+    &:hover {
+      color: #ffffff;
+      text-decoration: none;
+      background: #555555;
+      outline: 0;
+    }
+
+    &:focus {
+      outline: thin solid #333;
+      outline: 5px auto -webkit-focus-ring-color;
+      outline-offset: -2px;
+    }
+
+    &:active {
+        margin: 10px 10px 10px 10px;
+        outline: 0;
+        -webkit-box-shadow: 0 0 0;
+        -moz-box-shadow: 0 0 0;
+        box-shadow: 0 0 0;
+      }
+  }
 }
 
 .reddit-item {

@@ -17,7 +17,7 @@ define([ 'jquery', 'underscore', 'backbone', 'views/message.view'],
 
 			render: function () {
 				this.collection.each(this._renderChild, this);
-				this.$wrapper.append(this.$el);
+				this.$wrapper.prepend(this.$el);
 				// returning this for chaining
 				return this;
 			},

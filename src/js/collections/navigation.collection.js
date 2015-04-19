@@ -4,9 +4,42 @@ define(['underscore', 'backbone', 'models/navigation.item.model'],
 
 		var NavigationCollection =  Backbone.Collection.extend({
 			// Reference to this collection's model.
-			url:'/navigation.json',
+			model: NavModel,
 
-			model: NavModel
+			fetch: function() {
+				this.reset([
+					{
+						"item": "hot",
+						"url": "/hot",
+						"text": "hot",
+						"className": "active"
+					},
+					{
+						"item": "new",
+						"url": "/new",
+						"text": "new",
+						"className": ""
+					},
+					{
+						"item": "rising",
+						"url": "/rising",
+						"text": "rising",
+						"className": ""
+					},
+					{
+						"item": "controversial",
+						"url": "/controversial",
+						"text": "controversial",
+						"className": ""
+					},
+					{
+						"item": "top",
+						"url": "/top",
+						"text": "top",
+						"className": ""
+					}
+				])
+			}
 		});
 
 		return new NavigationCollection();

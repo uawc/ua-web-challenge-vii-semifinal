@@ -7,9 +7,12 @@ define(['underscore', 'backbone'],
 			// Default data of this Model
 			defaults: {
 				url:'',
+				name: '',
 				title: '',
 				score: '',
 				author: '',
+				after: '',
+				before: '',
 				created_utc: '',
 				num_comments: '',
 				subreddit: '',

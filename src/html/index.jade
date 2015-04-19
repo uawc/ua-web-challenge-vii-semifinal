@@ -4,8 +4,13 @@ html
         title Reddit Reader
         link(rel='stylesheet', href='css/main.css')
     body#app-root
-        include header
+        header#app-header
+            a.logo.no-refresh(href="/")
+            nav#main-navigation
 
         section#app-content
+            .pagination
+                button.btn.prev < Prev
+                button.btn.next > Next
 
         script(src="lib/requirejs/require.js", data-main="js/config.js")

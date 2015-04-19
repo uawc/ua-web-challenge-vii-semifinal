@@ -30,6 +30,28 @@ define([ 'jquery', 'underscore', 'backbone', 'views/navigation.item.view'],
 			_renderChild: function(child) {
 				var navView = new NavView({ model: child });
 				this.$el.append(navView.el);
+			},
+
+			toggleClass: function(item) {
+				_.each(this.collection.models, function (model) {
+					if (item === model.get('item')) {
+						model.set('className', 'active');
+						return;
+					}
+					model.set('className', '');
+				});
+
+				return this;
+			},
+
+			updateURL: function(url) {
+				url = url ? '/?/' + url : '';
+
+				_.each(this.collection.models, function (model) {
+					model.set('url', url + '/' + model.get('item'));
+				});
+
+				return this;
 			}
 		});
 	});

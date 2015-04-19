@@ -5,6 +5,7 @@ define(['underscore', 'backbone'],
 		return Backbone.Model.extend({
 			// Default data of this Model
 			defaults: {
+				item: '',
 				url: '',
 				text:'',
 				className: ''

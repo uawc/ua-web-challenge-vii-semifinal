@@ -5,11 +5,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 	// Our overall **AppView** is the top-level piece of UI.
 	return Backbone.View.extend({
 
-		_baseURL: 'http://www.reddit.com/',
-
-		_homeURL: 'http://www.reddit.com/hot',
-
-		_defaultSections: ['hot', 'new', 'rising', 'controversial', 'top'],
+		_count: 0,
 
 		// Define View element
 		el: '#app-root',
@@ -19,7 +15,9 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 
 		// Delegated events for creating new items, and clearing completed ones.
 		events: {
-			'click a.no-refresh': '_customNavigate'
+			'click a.no-refresh': '_customNavigate',
+			'click .pagination .btn.next': '_onPaginationNextClick',
+			'click .pagination .btn.prev': '_onPaginationPrevClick'
 		},
 
 		// Initialize app.view
@@ -28,22 +26,27 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 
 			this.listenTo(this._router, 'route:sectionRoute', this._sectionRoute);
 			this.listenTo(this._router, 'route:basicRoute', this._basicRoute);
-			this.listenTo(this._router, 'route:defaultRoute', function () {console.log('default')});
+			this.listenTo(this._router, 'route:defaultRoute', function () {
+				console.log('default')
+			});
 
-			navigationCollection.fetch({reset: true, success: this._renderNavigation});
+			navigationCollection.fetch();
+			this.navigationView = new NavigationView({collection: navigationCollection});
 		},
 
-		render: function (url) {
-			messageCollection.fetch({reset: true, url: url, success: this._renderMessages});
+		render: function (url, data) {
+			data = data || {};
+
+			messageCollection.fetch({reset: true, data: data, url: url, error: this._messageError, success: this._renderMessages.bind(this)});
 			return this;
 		},
 
 		_renderMessages: function (collection, response, options) {
-			new MessagesView({collection: collection});
+			this.messageView = new MessagesView({collection: collection});
 		},
 
-		_renderNavigation: function (collection, response, options) {
-			new NavigationView({collection: collection});
+		_messageError: function() {
+			console.log('No such page');
 		},
 
 		_customNavigate: function (e) {
@@ -55,8 +58,10 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 
 		_sectionRoute: function (url) {
 			console.log(url);
-			if (this._defaultSections.indexOf(url) !== -1) {
-				this.render(this._baseURL + url + '/.json');
+			if (this._router._defaultSections.indexOf(url) !== -1) {
+				this._router._lastURL = this._router._baseURL + url + '/.json';
+				this.render(this._router._lastURL);
+				this.navigationView.toggleClass(url);
 				return;
 			}
 			console.log('No such page')
@@ -64,44 +69,40 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 
 		_basicRoute: function (url) {
 			console.log(url);
-			url = this._parseURL(url);
+			var data = this._router._parseURL(url);
 
-			if (url) {
-				this.render(url);
+			if (data.url) {
+
+				if (data.arr[0]) {
+					this.navigationView.updateURL(data.arr[0]).toggleClass(data.arr[1] || 'hot');
+				} else {
+					this.navigationView.updateURL().toggleClass(data.arr[1] || 'hot');
+				}
+
+				this.render(data.url);
+				this._router._lastURL = data.url;
 				return;
 			}
 
 			console.log('No such page')
 		},
 
-		_parseURL: function (url) {
-			var arrURL;
+		_onPaginationNextClick: function() {
+			var after = messageCollection.first().get('after');
 
-			url = url || '';
-			url = url.indexOf('/') == 0 ? url.slice(1) : url;
-			arrURL = url.split('/');
+			this._count = this._count % 5 == 1 ? this._count - 1 : this._count + 25;
 
-			switch(arrURL.length) {
-				case 1:
-					// if not empty
-					if (!arrURL[0]) {
-						url = this._homeURL + '/.json';
-						break;
-					}
-					url = this._baseURL + 'r/' + url + '/.json';
-					break;
-				case 2:
-					if (this._defaultSections.indexOf(arrURL[1]) === -1) {
-						url = null;
-						break;
-					}
-					url = this._baseURL + 'r/' + url + '/.json';
-					break;
-				default :
-					url = null;
-					break;
+			this.render(this._router._lastURL, {after: after, count: this._count});
+		},
+
+		_onPaginationPrevClick: function() {
+			var before = messageCollection.first().get('before');
+
+			if (before) {
+				this._count = this._count % 5 == 1 ? this._count - 25 : this._count + 1;
+
+				this.render(this._router._lastURL, {before: before, count: this._count});
 			}
-			return url;
 		}
 	});
 });
