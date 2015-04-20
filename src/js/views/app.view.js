@@ -137,7 +137,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		_commentRoute: function(id) {
 			var url = this._router._baseURL + 'comments/' + id + '/.json';
 
-			commentCollection.fetch({reset: true, url: url, error: this._requestError, success: this._renderComments.bind(this)})
+			commentCollection.fetch({reset: true, url: url, error: this._requestError, success: this._renderComments.bind(this)});
 		},
 
 		/**

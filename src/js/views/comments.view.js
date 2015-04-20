@@ -54,7 +54,7 @@ define([ 'jquery', 'underscore', 'backbone', 'views/comment.view', 'models/comme
 						var commentView = new CommentView({ model: model });
 
 					if (data[i].data.replies) {
-						self._addSubComments(data[i].data.replies.data.children, commentView.$el)
+						self._addSubComments(data[i].data.replies.data.children, commentView.$el);
 					}
 
 					$el.append(commentView.el);

@@ -1,5 +1,5 @@
-define(['jquery', 'reddit', 'backbone', 'routers/router', 'views/app.view'],
-	function($, reddit, Backbone, Router, AppView){
+define(['jquery', 'backbone', 'routers/router', 'views/app.view'],
+	function($, Backbone, Router, AppView){
 		var router = new Router(),
 			app = new AppView({router: router});
 

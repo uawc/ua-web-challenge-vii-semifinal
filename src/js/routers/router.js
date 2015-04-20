@@ -25,7 +25,7 @@ define(['jquery', 'backbone'],
 		},
 
 		defaultRoute: function () {
-			this.navigate('/')
+			this.navigate('/');
 		},
 
 		/**
