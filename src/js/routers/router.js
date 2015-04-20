@@ -1,17 +1,20 @@
-define(['jquery', 'backbone', 'underscore', 'extends/historyExtend'],
-	function ($, Backbone, _, historyExtend) {
+define(['jquery', 'backbone'],
+	function ($, Backbone) {
 	'use strict';
 
 	/*_.extend(Backbone.history, historyExtend);*/
 
 	return Backbone.Router.extend({
-
+		// Base Reddit URL
 		_baseURL: 'http://www.reddit.com/',
 
+		//Default URL for home page
 		_homeURL: 'http://www.reddit.com/hot',
 
+		// Last Visited URL
 		_lastURL:'',
 
+		// Default sections
 		_defaultSections: ['hot', 'new', 'rising', 'controversial', 'top'],
 
 		routes: {
@@ -22,9 +25,15 @@ define(['jquery', 'backbone', 'underscore', 'extends/historyExtend'],
 		},
 
 		defaultRoute: function () {
-			console.log('default');
+			this.navigate('/')
 		},
 
+		/**
+		 * Parse URL for subreddit page
+		 * @private
+		 * @param url - {string}
+		 * @return {object}
+		 * */
 		_parseURL: function (url) {
 			var arrURL,
 				pattern = /^\/|\/$/g;

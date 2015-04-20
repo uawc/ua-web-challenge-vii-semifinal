@@ -1,5 +1,5 @@
-define(['underscore', 'backbone', 'reddit', 'models/message.model'],
-	function (_, Backbone, reddit, MessageModel) {
+define(['underscore', 'backbone', 'models/message.model'],
+	function (_, Backbone, MessageModel) {
 	'use strict';
 
 		var MessagesCollection =  Backbone.Collection.extend({

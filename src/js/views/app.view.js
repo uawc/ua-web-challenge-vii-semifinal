@@ -2,9 +2,10 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 ], function ($, _, Backbone, messageCollection, navigationCollection, commentCollection, MessagesView, CommentsView, NavigationView, templates) {
 	'use strict';
 
-	// Our overall **AppView** is the top-level piece of UI.
+	// Main App View
 	return Backbone.View.extend({
 
+		// count for pagination request
 		_count: 0,
 
 		// Define View element
@@ -32,25 +33,53 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 			this.navigationView = new NavigationView({collection: navigationCollection});
 		},
 
+		/**
+		 * Main Render of App
+		 * @public
+		 * @param url - {string}
+		 * @param data - {object}
+		 * */
 		render: function (url, data) {
-			data = data || {};
+			messageCollection.fetch({reset: true, data: data || {}, url: url, error: this._requestError, success: this._renderMessages.bind(this)});
 
-			messageCollection.fetch({reset: true, data: data, url: url, error: this._requestError, success: this._renderMessages.bind(this)});
 			return this;
 		},
 
+		/**
+		 * Message render
+		 * @private
+		 * @param collection - {object}
+		 * @param response - {object}
+		 * @param options - {object}
+		 * */
 		_renderMessages: function (collection, response, options) {
 			this.messageView = new MessagesView({collection: collection});
 		},
 
+		/**
+		 * Comments render
+		 * @private
+		 * @param collection - {object}
+		 * @param response - {object}
+		 * @param options - {object}
+		 * */
 		_renderComments: function (collection, response, options) {
 			this.commentsView = new CommentsView({collection: collection});
 		},
 
+		/**
+		 * Request Error handling
+		 * * @private
+		 * */
 		_requestError: function() {
-			console.log('request error');
+			this._router.navigate('/');
+			console.error('Request error');
 		},
 
+		/**
+		 * handling link clicking through router.navigate
+		 * @private
+		 * */
 		_customNavigate: function (e) {
 			var $el = $(e.currentTarget);
 			e.preventDefault();
@@ -58,6 +87,11 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 			this._router.navigate($el.attr('href'), {trigger: true});
 		},
 
+		/**
+		 * Behavior in case navigation was changed
+		 * @private
+		 * @param url - {string}
+		 * */
 		_sectionRoute: function (url) {
 
 			if (this._router._defaultSections.indexOf(url) !== -1) {
@@ -70,6 +104,11 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 			this._router.navigate('/');
 		},
 
+		/**
+		 * Behavior for home page and subreddit
+		 * @private
+		 * @param url - {string}
+		 * */
 		_basicRoute: function (url) {
 			console.log(url);
 			var data = this._router._parseURL(url);
@@ -90,12 +129,21 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 			this._router.navigate('/');
 		},
 
+		/**
+		 * Behavior for comments page
+		 * @private
+		 * @param id - {string}
+		 * */
 		_commentRoute: function(id) {
 			var url = this._router._baseURL + 'comments/' + id + '/.json';
 
 			commentCollection.fetch({reset: true, url: url, error: this._requestError, success: this._renderComments.bind(this)})
 		},
 
+		/**
+		 * Handling Next clicking at pagination
+		 * @private
+		 * */
 		_onPaginationNextClick: function() {
 			var after = messageCollection.first().get('after');
 
@@ -104,6 +152,10 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 			this.render(this._router._lastURL, {after: after, count: this._count});
 		},
 
+		/**
+		 * Handling Prev clicking at pagination
+		 * @private
+		 * */
 		_onPaginationPrevClick: function() {
 			var before = messageCollection.first().get('before');
 

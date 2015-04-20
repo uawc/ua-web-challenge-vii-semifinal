@@ -32,6 +32,11 @@ define([ 'jquery', 'underscore', 'backbone', 'views/navigation.item.view'],
 				this.$el.append(navView.el);
 			},
 
+			/**
+			 * Toggle class for navigation menu item
+			 * @public
+			 * @param item {string}
+			 * */
 			toggleClass: function(item) {
 				_.each(this.collection.models, function (model) {
 					if (item === model.get('item')) {
@@ -44,6 +49,11 @@ define([ 'jquery', 'underscore', 'backbone', 'views/navigation.item.view'],
 				return this;
 			},
 
+			/**
+			 * Update navigation URL
+			 * @public
+			 * @param url {string}
+			 * */
 			updateURL: function(url) {
 				url = url ? '/?/' + url : '';
 

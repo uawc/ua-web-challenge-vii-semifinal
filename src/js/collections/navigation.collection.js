@@ -7,6 +7,7 @@ define(['underscore', 'backbone', 'models/navigation.item.model'],
 			model: NavModel,
 
 			fetch: function() {
+				// reset with default data
 				this.reset([
 					{
 						"item": "hot",

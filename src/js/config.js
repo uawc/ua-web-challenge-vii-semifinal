@@ -5,7 +5,6 @@ require.config({
 		jquery: '../lib/jquery/dist/jquery.min',
 		underscore: '../lib/underscore/underscore-min',
 		backbone: '../lib/backbone/backbone',
-		reddit: '../lib/reddit.js/reddit.min',
 		templates: 'templates'
 	},
 	shim: {
@@ -18,9 +17,6 @@ require.config({
 				'jquery'
 			],
 			exports: 'Backbone'
-		},
-		'reddit': {
-			exports: 'reddit'
 		}
 	},
 	deps: ['main']
