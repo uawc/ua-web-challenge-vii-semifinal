@@ -9,15 +9,11 @@ define(['jquery', 'backbone', 'routers/router', 'views/app.view'],
 				scope: '/'
 			}).then(function(registration) {
 				// Registration was successful
-				console.log(registration);
+				console.log('ServiceWorker registration success: ');
 			}).catch(function(err) {
 				// registration failed :(
-				console.log('ServiceWorker registration failed: ', err);
+				console.log('ServiceWorker registration failed');
 			});
-
-			/*navigator.serviceWorker.getRegistration().then(function(reg) {
-				console.log(req);
-			});*/
 		}
 
 		router = new Router();
