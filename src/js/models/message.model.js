@@ -67,11 +67,17 @@ define(['underscore', 'backbone'],
 			 * @param url {string}
 			 * */
 			_checkThumbnail: function(url) {
-				var regExp = new RegExp('^http:\/\/|^https:\/\/');
+				var regExp = new RegExp('^http:\/\/|^https:\/\/'),
+					newUrl;
 
 				if (!regExp.test(url)) {
 					this.set('thumbnail', '');
+					return;
 				}
+
+				newUrl = url.replace(regExp, "");
+
+				this.set('thumbnail', location.protocol + "//" + newUrl);
 			}
 		});
 });

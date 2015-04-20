@@ -1,20 +1,10 @@
-define(['jquery', 'backbone', 'routers/router', 'views/app.view'],
-	function($, Backbone, Router, AppView){
+define(['jquery', 'backbone', 'sw/sw.module', 'routers/router', 'views/app.view'],
+	function($, Backbone, serviceWorker, Router, AppView){
 		var router,
 			app;
 
-		if (navigator.serviceWorker) {
-			navigator.serviceWorker.register('/sw.js', {
-				// The scope cannot be parent to the script url
-				scope: '/'
-			}).then(function(registration) {
-				// Registration was successful
-				console.log('ServiceWorker registration success: ');
-			}).catch(function(err) {
-				// registration failed :(
-				console.log('ServiceWorker registration failed');
-			});
-		}
+		// initialization of Service Worker
+		serviceWorker.init();
 
 		router = new Router();
 

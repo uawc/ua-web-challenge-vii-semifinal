@@ -1,5 +1,6 @@
 require.config({
 	baseUrl: 'js',
+	out: "main.js",
 	paths: {
 		jade: '../lib/jade/runtime',
 		jquery: '../lib/jquery/dist/jquery.min',

@@ -1,72 +1,151 @@
-var dataBase = 'web-challenge',
-    scriptURL = '/polyfill.js',
-    cacheURL = [
-      '/',
-      '/css/main.css',
-      '/css/fonts/Fixedsys500c.eot',
-      '/css/fonts/Fixedsys500c.svg',
-      '/css/fonts/Fixedsys500c.ttf',
-      '/css/fonts/Fixedsys500c.woff',
-      '/img/logo.png',
-      '/js/config.js',
-      '/js/main.js',
-      '/js/templates.js',
-      '/js/collections/comment.collection.js',
-      '/js/collections/message.collection.js',
-      '/js/collections/navigation.collection.js',
-      '/js/models/comment.model.js',
-      '/js/models/message.model.js',
-      '/js/models/navigation.item.model.js',
-      '/js/routers/router.js',
-      '/js/views/app.view.js',
-      '/js/views/comment.view.js',
-      '/js/views/comments.view.js',
-      '/js/views/message.view.js',
-      '/js/views/messages.view.js',
-      '/js/views/navigation.view.js',
-      '/js/views/navigation.item.view.js',
-      '/lib/backbone/backbone.js',
-      '/lib/jade/runtime.js',
-      '/lib/jquery/dist/jquery.min.js',
-      '/lib/underscore/underscore-min.js',
-      '/lib/requirejs/require.js'
-    ];
+var DEFAULT_BASE_URL = './';
+var DEFAULT_VERSION = 1;
 
+var precacheUrls;
+var baseUrl;
+var version;
+var networkCacheName = 'network:' + self.scope + ':';
+var fallbackCacheName = 'fallback:' + self.scope + ':';
 
-// Chrome's currently missing some useful cache methods,
-// this polyfill adds them.
-importScripts(scriptURL);
+function importPolyFills() {
+  importScripts('polyfill.js');
+}
 
-// Here comes the install event!
-// This only happens once, when the browser sees this
-// version of the ServiceWorker for the first time.
-self.addEventListener('install', function(event) {
-  // We pass a promise to event.waitUntil to signal how 
-  // long install takes, and if it failed
-  event.waitUntil(
-      // We open a cache…
-      caches.open(dataBase).then(function(cache) {
-        // And add resources to it
-        return cache.addAll(cacheURL);
-      })
-  );
-});
+function deserializeUrlParams(queryString) {
+  // Map is a collections class which takes an Array of Arrays as a constructor argument.
+  // It's different from Array.map(), which is a method that applies a function to each
+  // element in an Array, returning the result as a new Array.
+  // Delightfully/confusingly, we're using both here.
+  return new Map(queryString.split('&').map(function(keyValuePair) {
+    return keyValuePair.split('=').map(decodeURIComponent);
+  }));
+}
 
-// The fetch event happens for the page request with the
-// ServiceWorker's scope, and any request made within that
-// page
-self.addEventListener('fetch', function(event) {
-  // Calling event.respondWith means we're in charge
-  // of providing the response. We pass in a promise
-  // that resolves with a response object
-  event.respondWith(
-      // First we look for something in the caches that
-      // matches the request
-      caches.match(event.request).then(function(response) {
-        // If we get something, we return it, otherwise
-        // it's null, and we'll pass the request to
-        // fetch, which will use the network.
-        return response || fetch(event.request);
-      })
-  );
-});
+function initFromUrlParams() {
+  var params = deserializeUrlParams(location.search.substring(1));
+
+  // Allow some defaults to be overridden via URL parameters.
+  baseUrl = new URL(params.has('baseUrl') ? params.get(baseUrl) : DEFAULT_BASE_URL, self.location.href).toString();
+  version = params.has('version') ? params.get('version') : DEFAULT_VERSION;
+  networkCacheName += version;
+  fallbackCacheName += version;
+  precacheUrls = params.has('precache') ? params.get('precache').split(',') : [];
+}
+
+function getNetworkCache() {
+  return caches.open(networkCacheName);
+}
+
+function getFallbackCache() {
+  return caches.open(fallbackCacheName);
+}
+
+function addEventListeners() {
+  self.addEventListener('install', function(event) {
+    // Pre-cache everything in precacheUrls, and wait until that's done to complete the install.
+    event.waitUntil(
+        Promise.all([
+          getNetworkCache(),
+          getFallbackCache()
+        ]).then(function(caches) {
+          return caches[0].addAll(precacheUrls);
+        })
+    );
+  });
+
+  self.addEventListener('activate', function(event) {
+    // TODO: Tidy up old caches
+  });
+
+  self.addEventListener('fetch', function(event) {
+    var request = event.request;
+
+    // Basic read-through caching.
+    event.respondWith(
+        getNetworkCache().then(function(networkCache) {
+          return networkCache.match(request).then(function(response) {
+            if (response) {
+              console.log('  cache hit!');
+              return response;
+            } else {
+              // we didn't have it in the cache, so add it to the cache and return it
+              console.log('  cache miss; attempting to fetch and cache at runtime...');
+
+              return fetch(request.clone()).then(function(response) {
+                if (response.status >= 400) {
+                  return Promise.reject(new Error(response.statusText));
+                }
+                console.log('  fetch successful.');
+                networkCache.put(request, response.clone());
+                return response;
+              }).catch(function() {
+                console.log('  fetch failed, trying the fallback cache.');
+                return getFallbackCache().then(function(fallbackCache) {
+                  return fallbackCache.match(request);
+                });
+              });
+            }
+          });
+        })
+    );
+  });
+
+  self.addEventListener('message', function(event) {
+    console.log('onmessage; data is', event.data);
+
+    getNetworkCache().then(function(cache) {
+      var url = event.data.url;
+      switch (event.data.command) {
+        case 'status':
+          cache.match(event.data.url).then(function(response) {
+            event.data.port.postMessage({
+              url: url,
+              cached: !!response
+            });
+          });
+          break;
+
+        case 'cache':
+          cache.add(url).then(function() {
+            event.data.port.postMessage({
+              url: url,
+              cached: true
+            });
+          });
+          break;
+
+        case 'uncache':
+          cache.delete(url).then(function() {
+            event.data.port.postMessage({
+              url: url,
+              cached: false
+            });
+          });
+          break;
+
+        case 'registerFallbackUrl':
+          getFallbackCache().then(function(fallbackCache) {
+            fetch(event.data.fallbackUrl).then(function(response) {
+              fallbackCache.put(url, response);
+              console.log('  cached', event.data.fallbackUrl, 'as fallback for', url);
+              event.data.port.postMessage({
+                url: event.data.fallbackUrl,
+                cached: true
+              });
+            });
+          });
+          break;
+
+        case 'registerFallbackData':
+          getFallbackCache().then(function(fallbackCache) {
+            fallbackCache.put(url, new Response(event.data.fallbackData));
+          });
+          break;
+      }
+    });
+  });
+}
+
+importPolyFills();
+initFromUrlParams();
+addEventListeners();

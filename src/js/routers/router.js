@@ -6,10 +6,10 @@ define(['jquery', 'backbone'],
 
 	return Backbone.Router.extend({
 		// Base Reddit URL
-		_baseURL: 'http://www.reddit.com/',
+		_baseURL: location.protocol + '//www.reddit.com/',
 
 		//Default URL for home page
-		_homeURL: 'http://www.reddit.com/hot',
+		_homeURL: location.protocol + '//www.reddit.com/hot',
 
 		// Last Visited URL
 		_lastURL:'',
