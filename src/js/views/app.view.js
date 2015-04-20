@@ -115,7 +115,6 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		 * @param url - {string}
 		 * */
 		_basicRoute: function (url) {
-			console.log(url);
 			var data = this._router._parseURL(url);
 
 			if (data.url) {
