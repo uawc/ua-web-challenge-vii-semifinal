@@ -6,25 +6,16 @@ define(['underscore', 'backbone'],
 
 			// Default data of this Model
 			defaults: {
-				id: '',
-				url:'',
-				name: '',
-				title: '',
 				score: '',
 				author: '',
-				after: '',
-				before: '',
-				created_utc: '',
-				num_comments: '',
-				subreddit: '',
-				thumbnail: '',
-				commentsURL: ''
+				body: '',
+				replies: '',
+				created_utc: ''
 			},
 
 			// Initialize message.model
 			initialize: function() {
 				this._convertTime();
-				this._checkThumbnail(this.get('thumbnail'));
 			},
 
 			/**
@@ -59,19 +50,6 @@ define(['underscore', 'backbone'],
 			 * */
 			_addZero: function(i) {
 				return i < 10 ? "0" + i : i;
-			},
-
-			/**
-			 * Check if thumbnail is an URL
-			 * @private
-			 * @param url {string}
-			 * */
-			_checkThumbnail: function(url) {
-				var regExp = new RegExp('^http:\/\/|^https:\/\/');
-
-				if (!regExp.test(url)) {
-					this.set('thumbnail', '');
-				}
 			}
 		});
 });

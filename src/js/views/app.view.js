@@ -1,5 +1,5 @@
-define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'collections/navigation.collection', 'views/messages.view', 'views/navigation.view', 'templates'
-], function ($, _, Backbone, messageCollection, navigationCollection, MessagesView, NavigationView, templates) {
+define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'collections/navigation.collection', 'collections/comment.collection', 'views/messages.view', 'views/comments.view', 'views/navigation.view', 'templates'
+], function ($, _, Backbone, messageCollection, navigationCollection, commentCollection, MessagesView, CommentsView, NavigationView, templates) {
 	'use strict';
 
 	// Our overall **AppView** is the top-level piece of UI.
@@ -26,9 +26,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 
 			this.listenTo(this._router, 'route:sectionRoute', this._sectionRoute);
 			this.listenTo(this._router, 'route:basicRoute', this._basicRoute);
-			this.listenTo(this._router, 'route:defaultRoute', function () {
-				console.log('default');
-			});
+			this.listenTo(this._router, 'route:commentRoute', this._commentRoute);
 
 			navigationCollection.fetch();
 			this.navigationView = new NavigationView({collection: navigationCollection});
@@ -37,7 +35,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		render: function (url, data) {
 			data = data || {};
 
-			messageCollection.fetch({reset: true, data: data, url: url, error: this._messageError, success: this._renderMessages.bind(this)});
+			messageCollection.fetch({reset: true, data: data, url: url, error: this._requestError, success: this._renderMessages.bind(this)});
 			return this;
 		},
 
@@ -45,8 +43,12 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 			this.messageView = new MessagesView({collection: collection});
 		},
 
-		_messageError: function() {
-			console.log('No such page');
+		_renderComments: function (collection, response, options) {
+			this.commentsView = new CommentsView({collection: collection});
+		},
+
+		_requestError: function() {
+			console.log('request error');
 		},
 
 		_customNavigate: function (e) {
@@ -57,14 +59,15 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		},
 
 		_sectionRoute: function (url) {
-			console.log(url);
+
 			if (this._router._defaultSections.indexOf(url) !== -1) {
 				this._router._lastURL = this._router._baseURL + url + '/.json';
 				this.render(this._router._lastURL);
 				this.navigationView.toggleClass(url);
 				return;
 			}
-			console.log('No such page');
+
+			this._router.navigate('/');
 		},
 
 		_basicRoute: function (url) {
@@ -84,7 +87,13 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 				return;
 			}
 
-			console.log('No such page');
+			this._router.navigate('/');
+		},
+
+		_commentRoute: function(id) {
+			var url = this._router._baseURL + 'comments/' + id + '/.json';
+
+			commentCollection.fetch({reset: true, url: url, error: this._requestError, success: this._renderComments.bind(this)})
 		},
 
 		_onPaginationNextClick: function() {

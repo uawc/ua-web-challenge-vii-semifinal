@@ -17,7 +17,12 @@ define(['jquery', 'backbone', 'underscore', 'extends/historyExtend'],
 		routes: {
 			"": "basicRoute",
 			":section": "sectionRoute",
+			"comments/:id": "commentRoute",
 			'*path':  'defaultRoute'
+		},
+
+		defaultRoute: function () {
+			console.log('default');
 		},
 
 		_parseURL: function (url) {
