@@ -41,7 +41,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		 * @param data - {object}
 		 * */
 		render: function (url, data) {
-			messageCollection.fetch({reset: true, data: data || {}, url: url, error: this._requestError, success: this._renderMessages.bind(this)});
+			messageCollection.fetch({reset: true, data: data || {}, url: url, error: this._requestError.bind(this), success: this._renderMessages.bind(this)});
 
 			return this;
 		},
@@ -141,7 +141,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		_commentRoute: function(id) {
 			var url = this._router._baseURL + 'comments/' + id + '/.json';
 
-			commentCollection.fetch({reset: true, url: url, error: this._requestError, success: this._renderComments.bind(this)});
+			commentCollection.fetch({reset: true, url: url, error: this._requestError.bind(this), success: this._renderComments.bind(this)});
 		},
 
 		/**

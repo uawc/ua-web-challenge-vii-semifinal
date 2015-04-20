@@ -84,6 +84,12 @@ module.exports = function(grunt) {
 				cwd: 'src/fonts',
 				src: ['**/*.eot', '**/*.woff', '**/*.svg', '**/*.ttf'],
 				dest: 'app/css/fonts'
+			},
+			sw: {
+				expand: true,
+				cwd: 'src/sw',
+				src: ['**/*.js'],
+				dest: 'app'
 			}
 		},
 
@@ -103,6 +109,10 @@ module.exports = function(grunt) {
 			js: {
 				files: ['src/js/**/*.js'],
 				tasks: ['copy:main']
+			},
+			sw: {
+				files: ['src/sw/**/*.js'],
+				tasks: ['copy:sw']
 			}
 		},
 
@@ -112,10 +122,10 @@ module.exports = function(grunt) {
 				limit: 10
 			},
 			build: {
-				tasks: ['less:main', 'jade:main', 'jade:templates', 'copy:main', 'copy:img', 'copy:font']
+				tasks: ['less:main', 'jade:main', 'jade:templates', 'copy:main', 'copy:img', 'copy:font', 'copy:sw']
 			},
 			watch: {
-				tasks: ['watch:css', 'watch:html', 'watch:templates', 'watch:js']
+				tasks: ['watch:css', 'watch:html', 'watch:templates', 'watch:js', 'watch:sw']
 			},
 			run: {
 				tasks: ['concurrent:watch', 'connect:main']
