@@ -24,6 +24,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		// Initialize app.view
 		initialize: function (options) {
 			this._router = options.router;
+			this.$pagination = $('.pagination');
 
 			this.listenTo(this._router, 'route:sectionRoute', this._sectionRoute);
 			this.listenTo(this._router, 'route:basicRoute', this._basicRoute);
@@ -53,6 +54,8 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		 * @param options - {object}
 		 * */
 		_renderMessages: function (collection, response, options) {
+			if (this.commentsView) commentCollection.reset();
+			this.$pagination.show();
 			this.messageView = new MessagesView({collection: collection});
 		},
 
@@ -64,6 +67,8 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		 * @param options - {object}
 		 * */
 		_renderComments: function (collection, response, options) {
+			if (this.messageWiew) messageCollection.reset();
+			this.$pagination.hide();
 			this.commentsView = new CommentsView({collection: collection});
 		},
 
