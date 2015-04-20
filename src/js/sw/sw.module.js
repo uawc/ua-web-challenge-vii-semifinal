@@ -29,7 +29,7 @@ define(['jquery'],
 
 			// Registration failed :(
 			_onRegisterError: function(err) {
-				console.log('ServiceWorker registration failed. Didn\'t you forget to enable Experimental web features at your browser?');
+				console.log('ServiceWorker registration failed. Didn\'t you forget to enable Experimental web features at your browser or use https protocol?');
 			}
 		};
 	});
