@@ -11,7 +11,7 @@ define(['underscore', 'backbone', 'models/comment.model'],
 				if (!response[1].data) return;
 				// Filtering object
 				return response[1].data.children.map(function(el){
-					return _.pick(el.data, 'body', 'replies', 'score','author','created_utc');
+					return _.pick(el.data, 'link_id', 'body', 'replies', 'score','author','created_utc');
 				});
 			}
 		});

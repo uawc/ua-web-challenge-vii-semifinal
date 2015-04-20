@@ -54,7 +54,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		 * @param options - {object}
 		 * */
 		_renderMessages: function (collection, response, options) {
-			if (this.commentsView) commentCollection.reset();
+			commentCollection.reset();
 			this.$pagination.show();
 			this.messageView = new MessagesView({collection: collection});
 		},
@@ -67,7 +67,7 @@ define(['jquery', 'underscore', 'backbone', 'collections/message.collection', 'c
 		 * @param options - {object}
 		 * */
 		_renderComments: function (collection, response, options) {
-			if (this.messageWiew) messageCollection.reset();
+			messageCollection.reset();
 			this.$pagination.hide();
 			this.commentsView = new CommentsView({collection: collection});
 		},

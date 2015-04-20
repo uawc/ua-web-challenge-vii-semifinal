@@ -7,6 +7,7 @@ define(['underscore', 'backbone'],
 			// Default data of this Model
 			defaults: {
 				score: '',
+				link_id: '',
 				author: '',
 				body: '',
 				replies: '',
