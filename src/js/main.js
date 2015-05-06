@@ -10,5 +10,5 @@ define(['jquery', 'backbone', 'sw/sw.module', 'routers/router', 'views/app.view'
 
 		app = new AppView({router: router});
 
-		Backbone.history.start({pushState: true});
+		Backbone.history.start({pushState: true, root: window.location.pathname});
 	});
