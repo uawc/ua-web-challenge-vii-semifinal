@@ -36,3 +36,7 @@ will not work on refresh. Since Backbone router uses "hash" you have to place `#
 
 Service worker works only via https. So be sure that you're using a proper protocol.
 Anyway you're able to check SW status in the console.
+
+###Where can you see It?
+
+It's quite simple, just go to GitHub page right *[here](https://graphoper.github.io/ua-web-challenge-vii-semifinal/)*
