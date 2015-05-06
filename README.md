@@ -26,13 +26,11 @@ That's all. Check [http://localhost:1000](http://localhost:1000) in your browser
 
 All links without `/?/` symbol at the beginning like: 
 
-> http://localhost:1000/hot or 
-> http://localhost:1000/comments/3374ps 
+> http://localhost:1000/hot or || http://localhost:1000/comments/3374ps 
 
 will not work on refresh. Since Backbone router uses "hash" you have to place `#` symbol at the beginning of those URLs.
 
-> http://localhost:1000/#hot
-> http://localhost:1000/#comments/3374ps.
+> http://localhost:1000/#hot || http://localhost:1000/#comments/3374ps.
 
 ####Service Worker
 
