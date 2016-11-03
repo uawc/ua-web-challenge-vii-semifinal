@@ -3,7 +3,7 @@
 ###How to install
 
 ```sh
-git clone https://github.com/Graphoper/ua-web-challenge-vii-semifinal.git
+git clone https://github.com/uawc/ua-web-challenge-vii-semifinal.git
 cd ua-web-challenge-vii-semifinal
 npm install -g grunt-cli bower
 npm install && bower install 
@@ -39,4 +39,4 @@ Anyway you're able to check SW status in the console.
 
 ###Where can you see It?
 
-It's quite simple, just go to GitHub page right *[here](https://graphoper.github.io/ua-web-challenge-vii-semifinal/)*
+It's quite simple, just go to GitHub page right *[here](https://uawc.github.io/ua-web-challenge-vii-semifinal/)*
